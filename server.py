@@ -5,6 +5,7 @@ import socket
 import struct
 
 LITTLE_ENDIAN_LEN_SIZE = 4
+FAILURE_STATUS_CODE = 1
 
 
 def get_massage(client_socket: socket) -> None:
@@ -58,7 +59,7 @@ def main():
         run_server(args.ip, args.port)
     except Exception as error:
         print(f"ERROR: {error}")
-        return 1
+        return FAILURE_STATUS_CODE
 
 
 if __name__ == "__main__":

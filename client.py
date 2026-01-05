@@ -4,6 +4,8 @@ import sys
 import socket
 import struct
 
+FAILURE_STATUS_CODE = 1
+
 
 def send_data(server_ip: str, server_port: int, data: str) -> None:
     """
@@ -34,7 +36,7 @@ def main():
         print("Done.")
     except Exception as error:
         print(f"ERROR: {error}")
-        return 1
+        return FAILURE_STATUS_CODE
 
 
 if __name__ == "__main__":
