@@ -3,12 +3,13 @@ import argparse
 import sys
 import socket
 import struct
+import threading
 
 LITTLE_ENDIAN_LEN_SIZE = 4
 FAILURE_STATUS_CODE = 1
 
 
-def get_massage(client_socket: socket) -> None:
+def get_message(client_socket: socket) -> None:
     packed = recv_exact(client_socket, LITTLE_ENDIAN_LEN_SIZE)
     if not packed:
         return
@@ -39,7 +40,8 @@ def run_server(ip: str, port: int):
 
     while True:
         client_socket = server_socket.accept()[0]
-        get_massage(client_socket)
+        connection_handler = threading.Thread(target=get_message, args=(client_socket,))
+        connection_handler.start()
         client_socket.close()
 
 
