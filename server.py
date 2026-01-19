@@ -4,13 +4,14 @@ import sys
 import threading
 from listener import Listener
 from connection import Connection
+from card import Card
 
 FAILURE_STATUS_CODE = 1
 
 
 def handle_client(client_socket: Connection) -> None:
     with client_socket:
-        print("recieved message: ", client_socket.receive_message().decode("utf-8"))
+        print(Card.deserialize(client_socket.receive_message()))
 
 
 def run_server(listener: Listener):
