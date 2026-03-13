@@ -3,6 +3,7 @@ import hashlib
 from Crypto.Cipher import AES
 from typing import Self, Optional
 from os import PathLike
+import io
 
 
 class Cryptimage:
@@ -46,3 +47,28 @@ class Cryptimage:
         self._key_hash = None
         self._tag = None
         return True
+
+    def save_to_file(self, file_name: str) -> None:
+        with open(file_name, "wb") as f:
+            if self._key_hash is None or self._tag is None:
+                f.write(b"\x00")
+            else:
+                f.write(b"\x01")
+                f.write(self._key_hash)
+                f.write(self._tag)
+            self._image.save(f, "PNG")
+
+    @classmethod
+    def load_from_file(cls, file_name: str | PathLike[str]) -> Self:
+        with open(file_name, "rb") as f:
+            encrypted_flag = f.read(1)
+            if encrypted_flag == b"\x00":
+                key_hash = None
+                tag = None
+            else:
+                key_hash = f.read(32)
+                tag = f.read(16)
+            image_bytes = f.read()
+        with Image.open(io.BytesIO(image_bytes)) as im:
+            im.load()
+            return cls(im.copy(), key_hash, tag)

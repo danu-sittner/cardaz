@@ -1,3 +1,4 @@
+from __future__ import annotations
 from PIL import Image
 from typing import Union, Self
 from crypt_image import Cryptimage
@@ -82,7 +83,7 @@ class Card:
         return serialized_card
 
     @classmethod
-    def deserialize(cls, serialized_bytes: bytes) -> Self:
+    def deserialize(cls, serialized_bytes: bytes) -> Card:
         offset = 0
         name, offset = read_str(serialized_bytes, offset)
         creator, offset = read_str(serialized_bytes, offset)
